@@ -9,7 +9,10 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "botkit": "^0.1.1"
+    "botkit": "^0.1.1",
+    "jasmine": "^2.4.1",
+    "karma": "^0.13.22",
+    "karma-jasmine": "^1.0.2"
   },
   "start": "node app"
 }
