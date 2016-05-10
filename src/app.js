@@ -23,7 +23,7 @@ controller.spawn({
     token: SLACK_TOKEN
 }).startRTM();
 
-controller.hears('play', ['direct_message', 'direct_mention', 'mention'], (bot, message) => {
+controller.hears('play', ['direct_message'], (bot, message) => {
     let askPlayerOne = function(response, convo) {
         convo.ask('Who\'s player one?', (response, convo) => {
             console.log(response);
@@ -39,7 +39,16 @@ controller.hears('play', ['direct_message', 'direct_mention', 'mention'], (bot, 
         });
     };
 
-    bot.startConversation(message, askPlayerOne);
+    bot.startConversation(message, (response, convo) => {
+        askPlayerOne();
+
+        convo.on('end', (convo) => {
+           if(convo.status == 'completed') {
+               var res = convo.extractResponses();
+               console.log(res);
+           }
+        });
+    });
 });
 
 function checkRows(player) {
