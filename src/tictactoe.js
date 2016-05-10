@@ -112,8 +112,6 @@ function startGame(convo, playerOne, playerTwo) {
 
 function startLoop(convo, game, playerOneTurn) {
     convo.ask(`Make a move player ${playerOneTurn ? 'one' : 'two'}`, (response) => {
-        console.log(game, response);
-
         let play = response.text;
 
         if(checkMove(game, playerOneTurn, response)) {
