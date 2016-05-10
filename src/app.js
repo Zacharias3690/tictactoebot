@@ -21,8 +21,9 @@ process.argv.forEach((val, index, array) => {
 });
 
 if(!SLACK_TOKEN) {
-    let config = require('./config');
+    let config = require('./keys');
     SLACK_TOKEN = config.token;
+    console.log('Using local key');
 }
 
 startGame();
