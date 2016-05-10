@@ -80,6 +80,9 @@ function checkMove(game, playerOneTurn, play) {
     //    return false;
     //} else
 
+    console.log(play.message, isNaN(parseInt(play.message)), game.board[parseInt(play.message) -1]);
+
+
     if(isNaN(parseInt(play.message)) || !!game.board[parseInt(play.message) - 1]) {
         return false;
     }
