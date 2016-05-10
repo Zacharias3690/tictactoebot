@@ -108,8 +108,14 @@ function getWinner(board) {
     return false;
 }
 
-function checkMove(board, player, play) {
-    return !board[parseInt(play) - 1];
+function checkMove(game, playerOneTurn, play) {
+    if(playerOneTurn && game.playerOne !== play.user) {
+        return false;
+    } else if(isNaN(play.message) || !game.board[parseInt(play.message) - 1]) {
+        return false;
+    }
+
+    return true;
 }
 
 function drawBoard(convo, board) {
@@ -132,22 +138,25 @@ function startGame(convo, playerOne, playerTwo) {
 
     //controller.storage.channels.save({id: message.channel, game: game});
     drawBoard(convo, game.board);
-    startLoop(convo, game.board, true);
+    startLoop(convo, game, true);
 }
 
-function startLoop(convo, board, playerOneTurn) {
-    convo.ask(`Make a move player ${playerOneTurn ? 'one' : 'two'}\n`, (play) => {
-        if(checkMove(board, playerOneTurn, play)) {
+function startLoop(convo, game, playerOneTurn) {
+    convo.ask(`Make a move player ${playerOneTurn ? 'one' : 'two'}\n`, (response) => {
+        let play = response.message;
+
+        if(checkMove(game, playerOneTurn, response)) {
             board[parseInt(play) - 1] = playerOneTurn ? 'X' : 'O';
-            drawBoard(convo, board);
+            drawBoard(convo, game.board);
             playerOneTurn = !playerOneTurn;
         } else {
-            console.log('Invalid move, try again');
+            convo.say('Invalid move, try again');
+            convo.repeat();
         }
 
         let winner;
-        if(getWinner(board) !== false) {
-            winner = getWinner(board);
+        if(getWinner(game.board) !== false) {
+            winner = getWinner(game.board);
 
             switch(winner) {
                 case gameData.playerOne:
@@ -160,7 +169,8 @@ function startLoop(convo, board, playerOneTurn) {
             convo.next();
 
         } else {
-            startLoop(convo,board, playerOneTurn);
+            startLoop(convo, game, playerOneTurn);
+            convo.next();
         }
     });
 }
