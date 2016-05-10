@@ -17,14 +17,29 @@ if(!SLACK_TOKEN) {
     console.log('Using local key');
 }
 
-startGame();
+//startGame();
 
 controller.spawn({
     token: SLACK_TOKEN
 }).startRTM();
 
-controller.hears('hello', ['direct_message', 'direct_mention', 'mention'], (bot, message) => {
-    bot.reply(message, 'goodbye');
+controller.hears('play', ['direct_message', 'direct_mention', 'mention'], (bot, message) => {
+    let askPlayerOne = function(response, convo) {
+        convo.ask('Who\'s player one?', (response, convo) => {
+            console.log(response);
+            askPlayerTwo(response, convo);
+            convo.next();
+        });
+    };
+
+    let askPlayerTwo = function(response, convo) {
+        convo.ask('Who\'s player two?', (response, convo) => {
+            console.log(response);
+            convo.next();
+        });
+    };
+
+    bot.startConversation(message, askPlayerOne);
 });
 
 function checkRows(player) {
