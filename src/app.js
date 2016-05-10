@@ -24,8 +24,11 @@ controller.spawn({
 }).startRTM();
 
 controller.hears('play', ['direct_message'], (bot, message) => {
+    let playerOne, playerTwo;
+
     let askPlayerOne = function(response, convo) {
         convo.ask('Who\'s player one?', (response, convo) => {
+            playerOne = response.user;
             askPlayerTwo(response, convo);
             convo.next();
         });
@@ -33,6 +36,7 @@ controller.hears('play', ['direct_message'], (bot, message) => {
 
     let askPlayerTwo = function(response, convo) {
         convo.ask('Who\'s player two?', (response, convo) => {
+            playerTwo = response.user;
             convo.next();
         });
     };
@@ -42,8 +46,7 @@ controller.hears('play', ['direct_message'], (bot, message) => {
 
         convo.on('end', (convo) => {
            if(convo.status == 'completed') {
-               var res = convo.extractResponses();
-               console.log(res);
+               startGame(bot, playerOne, playerTwo);
            }
         });
     });
@@ -122,20 +125,29 @@ function drawBoard(board) {
         }
     }
 
-    console.log(ui);
+    return ui;
 }
 
-function startGame() {
-    let board = new Array(9);
-    drawBoard(board);
-    startLoop(board, true);
+function startGame(bot, playerOne, playerTwo) {
+    let game = {
+        playerOne: playerOne,
+        playerTwo: playerTwo,
+        board: new Array(9)
+    };
+
+    controller.storage.channels.save({id: message.channel, game: game});
+
+    bot.startConversation(drawBoard(game.board), (response, convo) => {
+
+        startLoop(convo, game.board, true);
+    });
 }
 
-function startLoop(board, playerOneTurn) {
-    input.question(`Make a move player ${playerOneTurn ? 'one' : 'two'}\n`, (play) => {
+function startLoop(convo, board, playerOneTurn) {
+    convo.ask(`Make a move player ${playerOneTurn ? 'one' : 'two'}\n`, (play) => {
         if(checkMove(board, playerOneTurn, play)) {
             board[parseInt(play) - 1] = playerOneTurn ? 'X' : 'O';
-            drawBoard(board);
+            convo.say(drawBoard(board));
             playerOneTurn = !playerOneTurn;
         } else {
             console.log('Invalid move, try again');
@@ -153,7 +165,7 @@ function startLoop(board, playerOneTurn) {
                 default:
                     console.log('Tie game!');
             }
-            input.close();
+            convo.next();
 
         } else {
             startLoop(board, playerOneTurn);
