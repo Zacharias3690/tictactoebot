@@ -122,6 +122,7 @@ function startLoop(convo, game, playerOneTurn) {
         } else {
             convo.say('Invalid move, try again');
             convo.repeat();
+            return;
         }
 
         let winner;
