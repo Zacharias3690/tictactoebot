@@ -120,10 +120,14 @@ function checkPlayer(playerOneTurn, game, response) {
 
 function startLoop(convo, game, playerOneTurn) {
     convo.ask(`Make a move player ${playerOneTurn ? 'one' : 'two'}`, (response) => {
+        if(response.text === 'quit' && (response.user === game.playerOne || response.user === game.playerTwo)) {
+            convo.next();
+            return;
+        }
+
         if(!checkPlayer(playerOneTurn, game, response)) {
             convo.silentRepeat();
             convo.next();
-
             return;
         }
 
