@@ -38,17 +38,12 @@ controller.hears('play', ['direct_message'], (bot, message) => {
         convo.ask('Who\'s player two?', (response, convo) => {
             playerTwo = response.user;
             convo.next();
+            startGame(convo, playerOne, playerTwo)
         });
     };
 
     bot.startConversation(message, (response, convo) => {
         askPlayerOne(response, convo);
-
-        convo.on('end', (convo) => {
-           if(convo.status == 'completed') {
-               startGame(bot, playerOne, playerTwo);
-           }
-        });
     });
 });
 
@@ -128,7 +123,7 @@ function drawBoard(board) {
     return ui;
 }
 
-function startGame(bot, playerOne, playerTwo) {
+function startGame(convo, playerOne, playerTwo) {
     let game = {
         playerOne: playerOne,
         playerTwo: playerTwo,
@@ -136,11 +131,7 @@ function startGame(bot, playerOne, playerTwo) {
     };
 
     controller.storage.channels.save({id: message.channel, game: game});
-
-    bot.startConversation(drawBoard(game.board), (response, convo) => {
-
-        startLoop(convo, game.board, true);
-    });
+    startLoop(convo, game.board, true);
 }
 
 function startLoop(convo, board, playerOneTurn) {
