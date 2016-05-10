@@ -80,7 +80,7 @@ function checkMove(game, playerOneTurn, play) {
     //    return false;
     //} else
 
-    if(isNaN(parseInt(play.message)) || !!game.board[parseInt(play.message) - 1]) {
+    if(isNaN(parseInt(play.text)) || !!game.board[parseInt(play.text) - 1]) {
         return false;
     }
 
@@ -114,7 +114,7 @@ function startLoop(convo, game, playerOneTurn) {
     convo.ask(`Make a move player ${playerOneTurn ? 'one' : 'two'}`, (response) => {
         console.log(game, response);
 
-        let play = response.message;
+        let play = response.text;
 
         if(checkMove(game, playerOneTurn, response)) {
             game.board[parseInt(play) - 1] = playerOneTurn ? 'X' : 'O';

@@ -144,23 +144,23 @@ describe('app', () => {
            };
 
             play = {
-                message: null,
+                text: null,
                 user: null
             };
         });
 
         it('returns false for non numbers', () => {
-            play.message = 'a';
+            play.text = 'a';
             expect(app.checkMove(game, false, play)).toBe(false);
         });
 
         it('returns false for spots already filled in', () => {
-            play.message = '1';
+            play.text = '1';
             expect(app.checkMove(game, false, play)).toBe(false);
         });
 
         it('returns true for valid moves', () => {
-            play.message = '2';
+            play.text = '2';
             expect(app.checkMove(game, false, play)).toBe(true);
         });
     });
