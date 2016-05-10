@@ -130,7 +130,7 @@ function startGame(convo, playerOne, playerTwo) {
         board: new Array(9)
     };
 
-    controller.storage.channels.save({id: message.channel, game: game});
+    //controller.storage.channels.save({id: message.channel, game: game});
     startLoop(convo, game.board, true);
 }
 
