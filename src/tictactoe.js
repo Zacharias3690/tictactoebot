@@ -10,6 +10,7 @@ module.exports = {
     checkFull,
     getWinner,
     checkMove,
+    checkPlayer,
     drawBoard,
     startGame,
     startLoop
@@ -77,11 +78,9 @@ function getWinner(board) {
 }
 
 function checkMove(game, playerOneTurn, play) {
-    //if(playerOneTurn && game.playerOne !== play.user) {
-    //    return false;
-    //} else
-
-    if(isNaN(parseInt(play.text)) || !!game.board[parseInt(play.text) - 1]) {
+    if((playerOneTurn && game.playerOne !== play.user) || (!playerOneTurn && game.playerTwo !== play.user)) {
+        return false;
+    } else if(isNaN(parseInt(play.text)) || !!game.board[parseInt(play.text) - 1]) {
         return false;
     }
 
@@ -111,8 +110,23 @@ function startGame(convo, playerOne, playerTwo) {
     startLoop(convo, game, true);
 }
 
+function checkPlayer(playerOneTurn, game, response) {
+    if(playerOneTurn) {
+        return game.playerOne === response.user;
+    } else {
+        return game.playerTwo === response.user;
+    }
+}
+
 function startLoop(convo, game, playerOneTurn) {
     convo.ask(`Make a move player ${playerOneTurn ? 'one' : 'two'}`, (response) => {
+        if(!checkPlayer(playerOneTurn, game, response)) {
+            convo.silentRepeat();
+            convo.next();
+
+            return;
+        }
+
         let play = response.text;
 
         if(checkMove(game, playerOneTurn, response)) {
