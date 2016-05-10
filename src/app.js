@@ -9,17 +9,8 @@ let input = readLine.createInterface({
     input: process.stdin,
     output: process.stdout
 });
-let SLACK_TOKEN;
 
-process.argv.forEach((val, index, array) => {
-   console.log(index + ': ' + val);
-
-    let args = val.split('=');
-    if(args[0] === 'SLACK_TOKEN') {
-        let SLACK_TOKEN = args[1];
-    }
-});
-
+let SLACK_TOKEN = process.env.SLACK_TOKEN;
 if(!SLACK_TOKEN) {
     let config = require('./keys');
     SLACK_TOKEN = config.token;
