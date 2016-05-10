@@ -12,13 +12,11 @@ if(!SLACK_TOKEN) {
     console.log('Using local key');
 }
 
-//startGame();
-
 controller.spawn({
     token: SLACK_TOKEN
 }).startRTM();
 
-controller.hears('play', ['direct_message'], (bot, message) => {
+controller.hears('play', ['direct_message', 'direct_mention', 'mention'], (bot, message) => {
     let playerOne, playerTwo;
 
     let askPlayerOne = function(response, convo) {
