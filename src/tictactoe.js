@@ -119,29 +119,28 @@ function startLoop(convo, game, playerOneTurn) {
             game.board[parseInt(play) - 1] = playerOneTurn ? 'X' : 'O';
             drawBoard(convo, game.board);
             playerOneTurn = !playerOneTurn;
+
+            let winner;
+            if(getWinner(game.board) !== false) {
+                winner = getWinner(game.board);
+
+                switch(winner) {
+                    case gameData.playerOne:
+                    case gameData.playerTwo:
+                        convo.say(`player ${winner} wins!`);
+                        break;
+                    default:
+                        convo.say('Tie game!');
+                }
+                convo.next();
+
+            } else {
+                startLoop(convo, game, playerOneTurn);
+                convo.next();
+            }
         } else {
             convo.say('Invalid move, try again');
             convo.repeat();
-            return;
-        }
-
-        let winner;
-        if(getWinner(game.board) !== false) {
-            winner = getWinner(game.board);
-
-            switch(winner) {
-                case gameData.playerOne:
-                case gameData.playerTwo:
-                    convo.say(`player ${winner} wins!`);
-                    break;
-                default:
-                    convo.say('Tie game!');
-            }
-            convo.next();
-
-        } else {
-            startLoop(convo, game, playerOneTurn);
-            convo.next();
         }
     });
 }
