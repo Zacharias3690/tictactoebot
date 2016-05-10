@@ -80,9 +80,6 @@ function checkMove(game, playerOneTurn, play) {
     //    return false;
     //} else
 
-    console.log(play.message, isNaN(parseInt(play.message)), game.board[parseInt(play.message) -1]);
-
-
     if(isNaN(parseInt(play.message)) || !!game.board[parseInt(play.message) - 1]) {
         return false;
     }
@@ -114,11 +111,13 @@ function startGame(convo, playerOne, playerTwo) {
 }
 
 function startLoop(convo, game, playerOneTurn) {
-    convo.ask(`Make a move player ${playerOneTurn ? 'one' : 'two'}\n`, (response) => {
+    convo.ask(`Make a move player ${playerOneTurn ? 'one' : 'two'}`, (response) => {
+        console.log(game, response);
+
         let play = response.message;
 
         if(checkMove(game, playerOneTurn, response)) {
-            board[parseInt(play) - 1] = playerOneTurn ? 'X' : 'O';
+            game.board[parseInt(play) - 1] = playerOneTurn ? 'X' : 'O';
             drawBoard(convo, game.board);
             playerOneTurn = !playerOneTurn;
         } else {
