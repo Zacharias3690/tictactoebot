@@ -112,7 +112,7 @@ function checkMove(board, player, play) {
     return !board[parseInt(play) - 1];
 }
 
-function drawBoard(board) {
+function drawBoard(convo, board) {
     let ui = gameData.board;
     for(let i in board) {
         if(board[i]) {
@@ -120,7 +120,7 @@ function drawBoard(board) {
         }
     }
 
-    return ui;
+    convo.say(ui);
 }
 
 function startGame(convo, playerOne, playerTwo) {
@@ -131,6 +131,7 @@ function startGame(convo, playerOne, playerTwo) {
     };
 
     //controller.storage.channels.save({id: message.channel, game: game});
+    drawBoard(convo, game.board);
     startLoop(convo, game.board, true);
 }
 
@@ -138,7 +139,7 @@ function startLoop(convo, board, playerOneTurn) {
     convo.ask(`Make a move player ${playerOneTurn ? 'one' : 'two'}\n`, (play) => {
         if(checkMove(board, playerOneTurn, play)) {
             board[parseInt(play) - 1] = playerOneTurn ? 'X' : 'O';
-            convo.say(drawBoard(board));
+            drawBoard(convo, board);
             playerOneTurn = !playerOneTurn;
         } else {
             console.log('Invalid move, try again');
@@ -151,15 +152,15 @@ function startLoop(convo, board, playerOneTurn) {
             switch(winner) {
                 case gameData.playerOne:
                 case gameData.playerTwo:
-                    console.log(`player ${winner} wins!`);
+                    convo.say(`player ${winner} wins!`);
                     break;
                 default:
-                    console.log('Tie game!');
+                    convo.say('Tie game!');
             }
             convo.next();
 
         } else {
-            startLoop(board, playerOneTurn);
+            startLoop(convo,board, playerOneTurn);
         }
     });
 }
