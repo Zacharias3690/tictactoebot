@@ -26,7 +26,6 @@ controller.spawn({
 controller.hears('play', ['direct_message'], (bot, message) => {
     let askPlayerOne = function(response, convo) {
         convo.ask('Who\'s player one?', (response, convo) => {
-            console.log(response);
             askPlayerTwo(response, convo);
             convo.next();
         });
@@ -34,13 +33,12 @@ controller.hears('play', ['direct_message'], (bot, message) => {
 
     let askPlayerTwo = function(response, convo) {
         convo.ask('Who\'s player two?', (response, convo) => {
-            console.log(response);
             convo.next();
         });
     };
 
     bot.startConversation(message, (response, convo) => {
-        askPlayerOne();
+        askPlayerOne(response, convo);
 
         convo.on('end', (convo) => {
            if(convo.status == 'completed') {
