@@ -9,11 +9,26 @@ let input = readLine.createInterface({
     input: process.stdin,
     output: process.stdout
 });
+let SLACK_TOKEN;
+
+process.argv.forEach((val, index, array) => {
+   console.log(index + ': ' + val);
+
+    let args = val.split('=');
+    if(args[0] === 'SLACK_TOKEN') {
+        let SLACK_TOKEN = args[1];
+    }
+});
+
+if(!SLACK_TOKEN) {
+    let config = require('./config');
+    SLACK_TOKEN = config.token;
+}
 
 startGame();
 
 controller.spawn({
-    token: 'xoxb-41349996675-Tg5r0qjHvO5Fw2g8JSaRr619'
+    token: SLACK_TOKEN
 }).startRTM();
 
 controller.hears('hello', ['direct_message', 'direct_mention', 'mention'], (bot, message) => {
