@@ -2,7 +2,6 @@
 
 let readLine = require('readline');
 let Botkit = require('botkit');
-let utilities = require('./utilities');
 let ticTacToe = require('./tictactoe');
 let controller = Botkit.slackbot();
 

@@ -1,6 +1,7 @@
 'use strict';
 
 let gameData = require('./gameData');
+let utilities = require('./utilities');
 
 module.exports = {
     checkRows,
